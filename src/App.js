@@ -41,6 +41,13 @@
 //    => check if the square already has a X or O, if it is, 'return' in the handleClick
 //       function early
 // ---- A way to determine a winner.
+// 1. add a helper function 'calculateWinner' that takes an array of 9 squares,
+//    checks for a winner and returns 'X', 'O' or null.
+// 2. call 'calculateWinner(squares) in the Board component's 'handleClick' function
+//    to see if a player has won.
+// 3. return early to check if the square player has clicked has a 'X' or 'O'.
+// 4. display text to let the player know when the game is over.
+//    => add 'status' section to 'Board' component.
 
 
 import { useState } from 'react';
@@ -61,7 +68,7 @@ export default function Board() {
   const [squares, setSquares] = useState(Array(9).fill(null));
 
   function handleClick(i) {
-    if (squares[i]) {
+    if (squares[i] || calculateWinner(squares)) {
       return;
     }
 
@@ -77,8 +84,17 @@ export default function Board() {
     setXIsNext(!xIsNext);
   }
 
+  const winner = calculateWinner(squares);
+  let status;
+  if (winner) {
+    status = 'Winner: ' + winner;
+  } else {
+    status = 'Next player: ' + (xIsNext ? 'X' : 'O');
+  }
+
   return (
     <>
+      <div className="status">{status}</div>
       <div className="board-row">
         {/* when the square is clicked, the code after the arrow will run, calling 'handleclick(0) */}
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
@@ -97,4 +113,24 @@ export default function Board() {
       </div>
     </>
   );
+}
+
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
 }
