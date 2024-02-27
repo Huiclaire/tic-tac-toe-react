@@ -5,6 +5,10 @@ This project is a simple implementation of the classic Tic Tac Toe game built wi
 
 It allows two players to play the game in a web browser, automatically determines a winner.
 
+## Demo
+
+https://tic-tac-toe-react-claire.netlify.app/
+
 
 ## Run Locally
 
