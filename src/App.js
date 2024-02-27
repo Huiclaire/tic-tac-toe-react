@@ -19,7 +19,7 @@
 //    6-1. replace eventhandler with 'setValue('X');
 
 // -------------------- Completing the game --------------------------------------- //
-// ----- Lifting state into a parent component (Alternate placing 'X' and 'O').
+// ----- Lifting state into a parent component (Alternate placing 'X').
 // 1. edit the Board component so that it declares a state variable names 'squares'.
 // 2. pass the 'value' prop down to each 'Square'.
 // 3. edit the 'Square' component to receive the 'value' prop from the Board component.
@@ -35,8 +35,11 @@
 //         -> add an argument 'i' to the handleClick function that takes the
 //            index of the square to update.
 //    4-6. update the other eight squares to call 'handleClick'.
-
-
+// ----- Lifting state into a parent component (Alternate placing 'O').
+// 1. set the first move to be 'X' by default.
+// 2. make sure the the square is not overwritten when clicked again.
+//    => check if the square already has a X or O, if it is, 'return' in the handleClick
+//       function early
 // ---- A way to determine a winner.
 
 
@@ -51,15 +54,27 @@ function Square({ value, onSquareClick }) {
 }
 
 export default function Board() {
+  // 'xIsNext' is a boolean that tracks which player's turn it is. It is initilized
+  // to 'true' indicating that player 'x' goes first.
+  const [xIsNext, setXIsNext] = useState(true);
+  // 'square' represents the 9 squares of the game board.
   const [squares, setSquares] = useState(Array(9).fill(null));
 
   function handleClick(i) {
+    if (squares[i]) {
+      return;
+    }
+
     // create a copy of the 'square' array with slice() Array method.
     const nextSquares = squares.slice();
-    // update nextSquares array to add X to the first sqaure
-    nextSquares[i] = "X";
+    if (xIsNext) {
+      nextSquares[i] = "X";
+    } else {
+      nextSquares[i] = "O";
+    }
     // calling setSquares function lets React know the state of the component has changed.
     setSquares(nextSquares);
+    setXIsNext(!xIsNext);
   }
 
   return (
